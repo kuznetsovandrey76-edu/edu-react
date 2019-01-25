@@ -1,0 +1,17 @@
+{
+  "name": "edu-react",
+  "authors": [
+    "Andrey Kuznetsov <and.rey.q@yandex.ru>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
