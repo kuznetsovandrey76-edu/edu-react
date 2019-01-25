@@ -9,6 +9,8 @@ var gulp = require('gulp'),
     rigger = require('gulp-rigger'),
     cssmin = require('gulp-minify-css'),
     imagemin = require('gulp-imagemin'),
+    gutil = require("gulp-util"),
+    webpack = require('./webpack.config.js'),
     pngquant = require('imagemin-pngquant'),
     rimraf = require('rimraf'),
     browserSync = require("browser-sync"),
@@ -120,6 +122,7 @@ gulp.task('watch', function(){
     watch([path.watch.js], function(event, cb) {
         gulp.start('js');
     });
+    // watch(path.watch.js, ['webpack']);
     watch([path.watch.img], function(event, cb) {
         gulp.start('image');
     });

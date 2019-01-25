@@ -1,1 +1,1 @@
-1. Without babel and npm
+`npm prune` удаляет неиспользуемые пакеты
