@@ -10,28 +10,28 @@ var gulp = require('gulp'),
     cssmin = require('gulp-minify-css'),
     imagemin = require('gulp-imagemin'),
     gutil = require("gulp-util"),
-    webpack = require('./webpack.config.js'),
-    pngquant = require('imagemin-pngquant'),
+    webpack = require('gulp-webpack'),
+    webpackConfig = require('./webpack.config.js'),
     rimraf = require('rimraf'),
     browserSync = require("browser-sync"),
     reload = browserSync.reload;
 
 var path = {
-    public_html: { //Тут мы укажем куда складывать готовые после сборки файлы
+    build: { 
         html: 'public_html/',
         js: 'public_html/js/',
         css: 'public_html/css/',
         img: 'public_html/img/',
         fonts: 'public_html/fonts/'
     },
-    src: { //Пути откуда брать исходники
+    src: { 
         html: 'src/*.html', //Синтаксис src/*.html говорит gulp что мы хотим взять все файлы с расширением .html
         js: 'src/js/main.js',//В стилях и скриптах нам понадобятся только main файлы
         css: 'src/css/main.scss',
         img: 'src/img/**/*.*', //Синтаксис img/**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
         fonts: 'src/fonts/**/*.*'
     },
-    watch: { //Тут мы укажем, за изменением каких файлов мы хотим наблюдать
+    watch: { // За изменением каких файлов мы хотим наблюдать
         html: 'src/**/*.html',
         js: 'src/js/**/*.js',
         css: 'src/css/**/*.scss',
@@ -54,10 +54,10 @@ var config = {
 
 
 gulp.task('html', function () {
-    return gulp.src(path.src.html) //Выберем файлы по нужному пути
-        .pipe(rigger()) //Прогоним через rigger
-        .pipe(gulp.dest(path.public_html.html)) //Выплюнем их в папку public_html
-        .pipe(reload({stream: true})); //И перезагрузим наш сервер для обновлений
+    return gulp.src(path.src.html) 
+        .pipe(rigger()) 
+        .pipe(gulp.dest(path.build.html)) 
+        .pipe(reload({stream: true})); 
 });
 
 
@@ -67,7 +67,7 @@ gulp.task('js', function () {
         .pipe(sourcemaps.init()) //Инициализируем sourcemap
         .pipe(uglify()) //Сожмем наш js
         .pipe(sourcemaps.write()) //Пропишем карты
-        .pipe(gulp.dest(path.public_html.js)) //Выплюнем готовый файл в build
+        .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
         .pipe(reload({stream: true})); //И перезагрузим сервер
 });
 
@@ -79,7 +79,7 @@ gulp.task('css', function () {
         .pipe(prefixer()) //Добавим вендорные префиксы
         .pipe(cssmin()) //Сожмем
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.public_html.css)) //И в build
+        .pipe(gulp.dest(path.build.css)) //И в build
         .pipe(reload({stream: true}));
 });
 
@@ -89,17 +89,16 @@ gulp.task('image', function () {
         .pipe(imagemin({ //Сожмем их
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
-            use: [pngquant()],
             interlaced: true
         }))
-        .pipe(gulp.dest(path.public_html.img)) //И бросим в build
+        .pipe(gulp.dest(path.build.img)) //И бросим в build
         .pipe(reload({stream: true}));
 });
 
 
 gulp.task('fonts', function() {
     return gulp.src(path.src.fonts)
-        .pipe(gulp.dest(path.public_html.fonts))
+        .pipe(gulp.dest(path.build.fonts))
 });
 
 
@@ -122,13 +121,21 @@ gulp.task('watch', function(){
     watch([path.watch.js], function(event, cb) {
         gulp.start('js');
     });
-    // watch(path.watch.js, ['webpack']);
+    // watch(path.watch.js, function(event, cb) {
+    //     gulp.start('webpack')
+    // });
     watch([path.watch.img], function(event, cb) {
         gulp.start('image');
     });
     watch([path.watch.fonts], function(event, cb) {
         gulp.start('fonts');
     });
+});
+
+gulp.task('webpack', function() {
+    return gulp.src('./src/js/react.js')
+        .pipe(webpack(webpackConfig))
+        .pipe(gulp.dest('public_html/'))
 });
 
 
