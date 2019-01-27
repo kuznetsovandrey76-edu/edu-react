@@ -10,7 +10,9 @@ var gulp = require('gulp'),
     cssmin = require('gulp-minify-css'),
     imagemin = require('gulp-imagemin'),
     gutil = require("gulp-util"),
-    webpack = require('gulp-webpack'),
+    // webpack = require('gulp-webpack'),
+    webpack = require('webpack'),
+    webpackStream = require('webpack-stream'),
     webpackConfig = require('./webpack.config.js'),
     rimraf = require('rimraf'),
     browserSync = require("browser-sync"),
@@ -132,11 +134,11 @@ gulp.task('watch', function(){
     });
 });
 
-gulp.task('webpack', function() {
-    return gulp.src('./src/js/react.js')
-        .pipe(webpack(webpackConfig))
-        .pipe(gulp.dest('public_html/'))
-});
+// gulp.task('webpack', function() {
+//     return gulp.src('./src/js/react.js')
+//         .pipe(webpackStream(webpackConfig), webpack)
+//         .pipe(gulp.dest('public_html/js'))
+// });
 
 
 gulp.task('webserver', function () {
