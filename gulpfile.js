@@ -50,8 +50,7 @@ var config = {
     },
     tunnel: true,
     host: 'localhost',
-    port: 9000,
-    logPrefix: "Frontend_Devil"
+    port: 9000
 };
 
 
@@ -87,13 +86,13 @@ gulp.task('css', function () {
 
 
 gulp.task('image', function () {
-    return gulp.src(path.src.img) //Выберем наши картинки
-        .pipe(imagemin({ //Сожмем их
+    return gulp.src(path.src.img) 
+        .pipe(imagemin({ 
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
             interlaced: true
         }))
-        .pipe(gulp.dest(path.build.img)) //И бросим в build
+        .pipe(gulp.dest(path.build.img)) 
         .pipe(reload({stream: true}));
 });
 
@@ -106,7 +105,7 @@ gulp.task('fonts', function() {
 
 gulp.task('build', gulp.series(
     'html',
-    'js',
+    // 'js',
     'css',
     'fonts',
     'image'
@@ -114,36 +113,23 @@ gulp.task('build', gulp.series(
 
 
 gulp.task('watch', function(){
-    watch([path.watch.html], function(event, cb) {
-        gulp.start('html');
+    browserSync.init({
+        server: {
+            baseDir: './public_html/'
+        }
     });
-    watch([path.watch.css], function(event, cb) {
-        gulp.start('css');
-    });
-    watch([path.watch.js], function(event, cb) {
-        gulp.start('js');
-    });
-    // watch(path.watch.js, function(event, cb) {
-    //     gulp.start('webpack')
-    // });
-    watch([path.watch.img], function(event, cb) {
-        gulp.start('image');
-    });
-    watch([path.watch.fonts], function(event, cb) {
-        gulp.start('fonts');
-    });
+
+    gulp.watch(path.watch.html, gulp.series('html'));
+    gulp.watch(path.watch.css, gulp.series('css'));
+    gulp.watch(path.watch.js, gulp.series('js'));
+    gulp.watch(path.watch.img, gulp.series('image'));
+    gulp.watch(path.watch.fonts, gulp.series('fonts'));
 });
 
-// gulp.task('webpack', function() {
-//     return gulp.src('./src/js/react.js')
-//         .pipe(webpackStream(webpackConfig), webpack)
-//         .pipe(gulp.dest('public_html/js'))
+
+// gulp.task('webserver', function () {
+//     browserSync(config);
 // });
-
-
-gulp.task('webserver', function () {
-    browserSync(config);
-});
 
 
 gulp.task('clean', function (cb) {
@@ -151,4 +137,5 @@ gulp.task('clean', function (cb) {
 });
 
 
-gulp.task('default', gulp.series('build', 'webserver', 'watch'));
+// gulp.task('default', gulp.series('build', 'webserver', 'watch'));
+gulp.task('default', gulp.series('build', 'watch'));

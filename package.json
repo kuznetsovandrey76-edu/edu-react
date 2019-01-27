@@ -1,11 +1,9 @@
 {
   "name": "edu-react",
   "version": "1.0.0",
-  "description": "",
+  "description": "Education project - Gulp, Webpack, Babel, React",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack",
-    "dev": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production"
   },
   "repository": {
