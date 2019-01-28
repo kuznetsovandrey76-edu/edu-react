@@ -39,7 +39,6 @@ var path = {
 };
 
 
-
 gulp.task('html', function () {
     return gulp.src(path.src.html) 
         .pipe(rigger()) 
@@ -104,7 +103,6 @@ gulp.task('fonts', function() {
 });
 
 
-
 gulp.task('build', gulp.series(
     'html',
     'webpack',
@@ -112,7 +110,6 @@ gulp.task('build', gulp.series(
     'fonts',
     'image'
 ));
-
 
 
 gulp.task('watch', function(){
@@ -133,11 +130,9 @@ gulp.task('watch', function(){
 });
 
 
-
 gulp.task('clean', function (cb) {
     return rimraf(path.clean, cb);
 });
-
 
 
 gulp.task('default', gulp.series('build', 'watch'));
