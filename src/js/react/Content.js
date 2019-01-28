@@ -1,5 +1,20 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ContentCard from './ContentCard';
+
+class Test extends Component {
+    constructor() {
+        super();
+
+        this.state = {
+            name: "Andrey",
+            age: 28
+        }
+    }
+
+    render() {
+        return `Hello ${this.state.name}`;
+    }
+}
 
 function Content() {
     return (
@@ -28,6 +43,7 @@ function Content() {
                     addition: "Зависимость объема работы, которая выполняется алгоритмом, от размера входных данных, выраженная математической функцией"
                 }}
             />
+            <Test />
         </div>
     )
 }
