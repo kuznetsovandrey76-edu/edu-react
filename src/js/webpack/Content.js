@@ -1,10 +1,12 @@
 import React from 'react';
-import ReactDOM from "react-dom";
 
-ReactDOM.render(
-    <div>
-        <h1>Hello, World</h1>
-        <p>My name is Andrey</p>
-    </div>,
-    document.getElementById('content')
-);
+function Content() {
+    return (
+        <div>
+            <h1>Content</h1>
+            <p>bla bla bla</p>
+        </div>
+    )
+}
+
+export default Content;
