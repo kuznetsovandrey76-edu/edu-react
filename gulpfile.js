@@ -27,13 +27,13 @@ var path = {
         fonts: 'public_html/fonts/'
     },
     src: { 
-        html: 'src/*.html', //Синтаксис src/*.html говорит gulp что мы хотим взять все файлы с расширением .html
-        js: 'src/js/main.js',//В стилях и скриптах нам понадобятся только main файлы
+        html: 'src/*.html', // src/*.html говорит gulp что мы хотим взять все файлы с расширением .html
+        js: 'src/js/main.js',
         css: 'src/css/main.scss',
-        img: 'src/img/**/*.*', //Синтаксис img/**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
+        img: 'src/img/**/*.*', // img/**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
         fonts: 'src/fonts/**/*.*'
     },
-    watch: { // За изменением каких файлов мы хотим наблюдать
+    watch: { 
         html: 'src/**/*.html',
         js: 'src/js/**/*.js',
         css: 'src/css/**/*.scss',
@@ -44,15 +44,6 @@ var path = {
 };
 
 
-var config = {
-    server: {
-        baseDir: "./public_html"
-    },
-    tunnel: true,
-    host: 'localhost',
-    port: 9000
-};
-
 
 gulp.task('html', function () {
     return gulp.src(path.src.html) 
@@ -61,29 +52,26 @@ gulp.task('html', function () {
         .pipe(reload({stream: true})); 
 });
 
-
 gulp.task('js', function () {
-    return gulp.src(path.src.js) //Найдем наш main файл
-        .pipe(rigger()) //Прогоним через rigger
-        .pipe(sourcemaps.init()) //Инициализируем sourcemap
-        .pipe(uglify()) //Сожмем наш js
-        .pipe(sourcemaps.write()) //Пропишем карты
-        .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
-        .pipe(reload({stream: true})); //И перезагрузим сервер
-});
-
-
-gulp.task('css', function () {
-    return gulp.src(path.src.css) //Выберем наш main.scss
-        .pipe(sourcemaps.init()) //То же самое что и с js
-        .pipe(sass()) //Скомпилируем
-        .pipe(prefixer()) //Добавим вендорные префиксы
-        .pipe(cssmin()) //Сожмем
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.build.css)) //И в build
+    return gulp.src(path.src.js) 
+        .pipe(rigger()) 
+        .pipe(sourcemaps.init()) 
+        .pipe(uglify()) 
+        .pipe(sourcemaps.write()) 
+        .pipe(gulp.dest(path.build.js)) 
         .pipe(reload({stream: true}));
 });
 
+gulp.task('css', function () {
+    return gulp.src(path.src.css) 
+        .pipe(sourcemaps.init()) 
+        .pipe(sass()) 
+        .pipe(prefixer()) 
+        .pipe(cssmin()) 
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(path.build.css)) 
+        .pipe(reload({stream: true}));
+});
 
 gulp.task('image', function () {
     return gulp.src(path.src.img) 
@@ -96,11 +84,11 @@ gulp.task('image', function () {
         .pipe(reload({stream: true}));
 });
 
-
 gulp.task('fonts', function() {
     return gulp.src(path.src.fonts)
         .pipe(gulp.dest(path.build.fonts))
 });
+
 
 
 gulp.task('build', gulp.series(
@@ -112,6 +100,7 @@ gulp.task('build', gulp.series(
 ));
 
 
+
 gulp.task('watch', function(){
     browserSync.init({
         server: {
@@ -121,15 +110,14 @@ gulp.task('watch', function(){
 
     gulp.watch(path.watch.html, gulp.series('html'));
     gulp.watch(path.watch.css, gulp.series('css'));
-    gulp.watch(path.watch.js, gulp.series('js'));
+    // gulp.watch(path.watch.js, gulp.series('js'));
     gulp.watch(path.watch.img, gulp.series('image'));
     gulp.watch(path.watch.fonts, gulp.series('fonts'));
+
+    // Reload after - npm run build
+    gulp.watch('./public_html/js/bundle.js').on("change", reload);
 });
 
-
-// gulp.task('webserver', function () {
-//     browserSync(config);
-// });
 
 
 gulp.task('clean', function (cb) {
@@ -137,5 +125,5 @@ gulp.task('clean', function (cb) {
 });
 
 
-// gulp.task('default', gulp.series('build', 'webserver', 'watch'));
+
 gulp.task('default', gulp.series('build', 'watch'));

@@ -1,3 +1,7 @@
-body {
-    background: lightgray;
+.header {
+    background: khaki;
+
+    &__title {
+        font-style: italic;
+    }
 }

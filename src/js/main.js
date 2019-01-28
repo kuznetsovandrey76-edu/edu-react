@@ -1,7 +1,1 @@
-/*
- * Custom
- */
-//= files/app.js
-
-
-import app from './webpack/app';
+import content from './webpack/Content';
