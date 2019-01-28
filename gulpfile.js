@@ -1,7 +1,6 @@
 'use strict';
 
 var gulp = require('gulp'),
-    watch = require('gulp-watch'),
     prefixer = require('gulp-autoprefixer'),
     uglify = require('gulp-uglify'),
     sass = require('gulp-sass'),
@@ -9,11 +8,7 @@ var gulp = require('gulp'),
     rigger = require('gulp-rigger'),
     cssmin = require('gulp-minify-css'),
     imagemin = require('gulp-imagemin'),
-    gutil = require("gulp-util"),
-    // webpack = require('gulp-webpack'),
-    webpack = require('webpack'),
-    webpackStream = require('webpack-stream'),
-    webpackConfig = require('./webpack.config.js'),
+    webpack = require('webpack-stream'),
     rimraf = require('rimraf'),
     browserSync = require("browser-sync"),
     reload = browserSync.reload;
@@ -62,6 +57,25 @@ gulp.task('js', function () {
         .pipe(reload({stream: true}));
 });
 
+gulp.task('webpack', function () {
+    return gulp.src('./src/js/main.js')
+        .pipe(webpack({
+            module: {
+                rules: [{
+                    test: /\.(js|jsx)$/,
+                    loader: 'babel-loader',
+                    exclude: '/node_modules/',      
+                    query: {
+                        presets: ['react', 'env']
+                    }                        
+                }]},
+                output: {
+                    filename: 'bundle.js'
+                }
+            }))
+        .pipe(gulp.dest('public_html/js/'));
+});
+
 gulp.task('css', function () {
     return gulp.src(path.src.css) 
         .pipe(sourcemaps.init()) 
@@ -93,7 +107,7 @@ gulp.task('fonts', function() {
 
 gulp.task('build', gulp.series(
     'html',
-    // 'js',
+    'webpack',
     'css',
     'fonts',
     'image'
@@ -110,7 +124,7 @@ gulp.task('watch', function(){
 
     gulp.watch(path.watch.html, gulp.series('html'));
     gulp.watch(path.watch.css, gulp.series('css'));
-    // gulp.watch(path.watch.js, gulp.series('js'));
+    gulp.watch(path.watch.js, gulp.series('webpack'));
     gulp.watch(path.watch.img, gulp.series('image'));
     gulp.watch(path.watch.fonts, gulp.series('fonts'));
 

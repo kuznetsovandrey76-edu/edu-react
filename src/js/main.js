@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 
-import App from './webpack/App';
+import App from './react/App';
 
 ReactDOM.render(
     <App />,
-    document.getElementById('content')
+    document.getElementById('root')
 );
